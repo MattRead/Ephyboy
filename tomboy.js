@@ -18,7 +18,8 @@ Gdk = imports.gi.Gdk;
 
 // add some escaping functions to String prototype
 String.prototype.xmlEscape = function() {
-	return this.replace(/\&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\'/g,'&apos;').replace(/\"/g,'&quot;');
+	return this.replace(/\&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+		.replace(/\'/g,'&apos;').replace(/\"/g,'&quot;');
 }
 
 // create the Tomboy DBus object
@@ -126,7 +127,14 @@ var key_pressed_cb = function (window, event)
 extension = {
 	attach_window: function(window)
 	{
-		window.signal.key_press_event.connect(key_pressed_cb);
-		Gtk.Clipboard.get(Gdk.atom_intern("PRIMARY")).signal.owner_change.connect(_get_selection_cb);
+		window._tomboy_key_pressed_signal = window.signal.key_press_event.connect(key_pressed_cb);
+		window._tomboy_clipboard_signal = Gtk.Clipboard.get(Gdk.atom_intern("PRIMARY")).signal
+			.owner_change.connect(_get_selection_cb);
 	},
+	detach_window: function(window)
+	{
+		window.signal.disconnect(window._tomboy_key_pressed_signal);
+		Gtk.Clipboard.get(Gdk.atom_intern("PRIMARY")).signal
+			.disconnect(window._tomboy_clipboard_signal);
+	}
 }
