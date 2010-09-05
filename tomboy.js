@@ -18,7 +18,7 @@ Gdk = imports.gi.Gdk;
 
 // add some escaping functions to String prototype
 String.prototype.xmlEscape = function() {
-    return this.replace(/\&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\'/g,'&apos;').replace(/\"/g,'&quot;');
+	return this.replace(/\&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\'/g,'&apos;').replace(/\"/g,'&quot;');
 }
 
 // create the Tomboy DBus object
@@ -65,11 +65,12 @@ var create_tomboy_note = function(window)
 	var content = _selection_data.xmlEscape();
 	var notebook = 'Snippets'; // this should be an option
 
+	// connect to DBus if we are not yet.
 	if (!tomboy) {
 		tomboy = new Tomboy();
 	}
 
-	//make the URL look nice and linkify
+	//make the URL look nice, and linkify
 	url = "\n\n<italic><size:small>Source: <link:url>" + url + "</link:url></size:small></italic>\n\n";
 
 	try {
@@ -79,14 +80,16 @@ var create_tomboy_note = function(window)
 			var uri = tomboy.FindNoteRemoteSync(title);
 			var current_contents = tomboy.GetNoteContentsXmlRemoteSync(uri);
 			var separator = "<strike>\n                                    \n</strike>"
-			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + current_contents + separator + content + url + "</note-content>");
+			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + current_contents + separator
+				+ content + url + "</note-content>");
 			tomboy.AddTagToNoteRemoteSync(uri, "system:notebook:" + notebook);
 			tomboy.DisplayNoteRemote(uri);
 		}
-		// no note, create new one
+		// no existing note, create new one
 		else {
 			var uri = tomboy.CreateNamedNoteRemoteSync(title);
-			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + title + "\n\n" + content + url + "</note-content>");
+			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + title + "\n\n" + content
+				+ url + "</note-content>");
 			tomboy.AddTagToNoteRemoteSync(uri, "system:notebook:" + notebook);
 			tomboy.DisplayNoteRemote(uri);
 		}
@@ -109,7 +112,7 @@ var _get_selection_cb = function (clipboard, event)
 var key_pressed_cb = function (window, event)
 {
 	if(event.key.state & Gdk.ModifierType.CONTROL_MASK &&
-	   event.key.state & Gdk.ModifierType.SHIFT_MASK)
+		event.key.state & Gdk.ModifierType.SHIFT_MASK)
 	{
 		if(event.key.keyval == Gdk.B)
 		{
