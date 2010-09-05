@@ -1,0 +1,11 @@
+[Epiphany Extension]
+Name=Make Tomboy Note
+Description=Creates a Tomboy note based on selected text/
+Authors=Matt Read
+Version=1
+URL=http://www.gnome.org/projects/tomboy
+
+
+[Loader]
+Type=seed
+Module=tomboy
