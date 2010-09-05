@@ -1,1 +1,14 @@
-You are Reading ME
+EpiBoy Extension for Epiphany
+by Matt Read
+
+This extension will create a new Tomboy note in Tomboy based upon the current
+web page and selected text.
+
+USAGE
+
+For this extension to work it nakes a DBus call to Tomboy, which means Tomboy
+has to be running to create the new note.
+
+Simply select the text you want in the note and press CTRL+SHIFT+B to create
+the note and open it in Tomboy. The default notebook is "Snippets". Hopefully
+this will be customizable in the next release.
