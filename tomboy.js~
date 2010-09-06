@@ -11,12 +11,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Epiphany = imports.gi.Epiphany;
 DBus = imports.dbus;
 GLib = imports.gi.GLib;
 Gtk = imports.gi.Gtk;
 Gdk = imports.gi.Gdk;
-GdkPixbuf = imports.gi.GdkPixbuf;
+
 
 // add some escaping functions to String prototype
 String.prototype.xmlEscape = function() {
@@ -54,7 +53,7 @@ var tomboy = null;
 var _selection_data = '';
 
 // function to create tomboy note. accepts EphyWindow
-var create_tomboy_note = function(action, window)
+var create_tomboy_note = function(window)
 {
 	// short circuit if nothing selected.
 	if (!_selection_data) {
@@ -119,7 +118,7 @@ var key_pressed_cb = function (window, event)
 	{
 		if(event.key.keyval == Gdk.B)
 		{
-			create_tomboy_note(event, window);
+			create_tomboy_note(window);
 		}
 	}
 	return false;
@@ -129,35 +128,9 @@ var key_pressed_cb = function (window, event)
 extension = {
 	attach_window: function(window)
 	{
-		window._tomboy_key_pressed_signal = window.signal.key_press_event.connect(key_pressed_cb, window);
+		window._tomboy_key_pressed_signal = window.signal.key_press_event.connect(key_pressed_cb);
 		window._tomboy_clipboard_signal = Gtk.Clipboard.get(Gdk.atom_intern("PRIMARY")).signal
 			.owner_change.connect(_get_selection_cb);
-
-		var f = new Gtk.IconFactory()
-		f.add('tomboy', new Gtk.IconSet.from_pixbuf(
-			new GdkPixbuf.Pixbuf.from_file('/usr/share/icons/hicolor/scalable/apps/tomboy.svg')
-		));
-		f.add_default()
-
-		var action = new Gtk.Action({
-			name: 'TomboyNote',
-			label: 'Create _Tomboy Note',
-			tooltip: 'Create a Tomboy note from selection',
-			stock_id: "tomboy",
-			//action: create_tomboy_note
-		});
-		action.signal.activate.connect(create_tomboy_note, window);
-		var group = new Gtk.ActionGroup({name: "TomboyNoteActionGroup"});
-		group.add_action(action);
-
-		var ui_manager = window.get_ui_manager();
-		ui_manager.insert_action_group(group, 0);
-		var merge_id = ui_manager.new_merge_id();
-		ui_manager.add_ui(merge_id, "/menubar/ToolsMenu", "TomboyNoteMenu", "TomboyNote",
-			Gtk.UIManagerItemType.MENUITEM, true);
-
-		var model = Epiphany.EphyShell.get_default().get_toolbars_model(false);
-		model.set_name_flags("TomboyNote", 4) // EGG_TB_MODEL_NAME_KNOWN
 	},
 	detach_window: function(window)
 	{
