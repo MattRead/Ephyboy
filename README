@@ -10,5 +10,8 @@ For this extension to work it nakes a DBus call to Tomboy, which means Tomboy
 has to be running to create the new note.
 
 Simply select the text you want in the note and press CTRL+SHIFT+B to create
-the note and open it in Tomboy. The default notebook is "Snippets". Hopefully
-this will be customizable in the next release.
+the note and open it in Tomboy. Or, you can add the tomboy button to your
+toolbar where ever you want.
+
+The default notebook is "Snippets". Hopefullythis will be customizable in the
+next release.
