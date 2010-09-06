@@ -22,19 +22,21 @@ GdkPixbuf = imports.gi.GdkPixbuf;
 String.prototype.xmlEscape = function() {
 	return this.replace(/\&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 		.replace(/\'/g,'&apos;').replace(/\"/g,'&quot;');
-}
+};
 
 // create the Tomboy DBus object
 function Tomboy()
 {
     this._init();
 }
+
 Tomboy.prototype = {
     _init: function()
     {
 		DBus.session.proxifyObject(this, 'org.gnome.Tomboy', '/org/gnome/Tomboy/RemoteControl' );
-    },
+    }
 };
+
 var TomboyIface = {
     name: 'org.gnome.Tomboy.RemoteControl',
     methods: [
@@ -47,7 +49,7 @@ var TomboyIface = {
 		{ name: 'DisplayNote', inSignature: 's', outSignature: '' }
     ]
 };
-DBus.proxifyPrototype (Tomboy.prototype, TomboyIface);
+DBus.proxifyPrototype(Tomboy.prototype, TomboyIface);
 
 // create our globals
 var tomboy = null;
@@ -71,6 +73,7 @@ var create_tomboy_note = function(event, window)
 	var url = web_view.get_location(true).xmlEscape();
 	var title = web_view.get_title().xmlEscape();
 	var notebook = 'Snippets'; // this should be an option
+	var uri = '';
 
 	//make the URL look nice, and linkify
 	url = "\n\n<italic><size:small>Source: <link:url>" + url + "</link:url></size:small></italic>\n\n";
@@ -79,19 +82,19 @@ var create_tomboy_note = function(event, window)
 		// If note title exists append new contents to current contents
 		// Or should we create a new note?
 		if ( tomboy.NoteExistsRemoteSync(tomboy.FindNoteRemoteSync(title)) == 1 ) {
-			var uri = tomboy.FindNoteRemoteSync(title);
+			uri = tomboy.FindNoteRemoteSync(title);
 			var current_contents = tomboy.GetNoteContentsXmlRemoteSync(uri);
-			var separator = "<strike>\n                                    \n</strike>"
-			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + current_contents + separator
-				+ content + url + "</note-content>");
+			var separator = "<strike>\n                                    \n</strike>";
+			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + current_contents +
+				separator + content + url + "</note-content>");
 			tomboy.AddTagToNoteRemoteSync(uri, "system:notebook:" + notebook);
 			tomboy.DisplayNoteRemote(uri);
 		}
 		// no existing note, create new one
 		else {
-			var uri = tomboy.CreateNamedNoteRemoteSync(title);
-			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + title + "\n\n" + content
-				+ url + "</note-content>");
+			uri = tomboy.CreateNamedNoteRemoteSync(title);
+			tomboy.SetNoteContentsXmlRemoteSync(uri, "<note-content>" + title + "\n\n" + content +
+				url + "</note-content>");
 			tomboy.AddTagToNoteRemoteSync(uri, "system:notebook:" + notebook);
 			tomboy.DisplayNoteRemote(uri);
 		}
@@ -101,7 +104,7 @@ var create_tomboy_note = function(event, window)
 	}
 
 	return false;
-}
+};
 
 // listen for key pressed, act on ctrl+shift+B
 var key_pressed_cb = function (window, event)
@@ -115,7 +118,7 @@ var key_pressed_cb = function (window, event)
 		}
 	}
 	return false;
-}
+};
 
 // extend into the outer reaches of space.
 extension = {
@@ -124,18 +127,17 @@ extension = {
 		window._tomboy_key_pressed_signal = window.signal.key_press_event.connect(key_pressed_cb, window);
 
 		// create the tomboy icon cause I don't know if it has a stock_id
-		var f = new Gtk.IconFactory()
+		var f = new Gtk.IconFactory();
 		f.add('tomboy', new Gtk.IconSet.from_pixbuf(
 			new GdkPixbuf.Pixbuf.from_file('/usr/share/icons/hicolor/scalable/apps/tomboy.svg')
 		));
-		f.add_default()
+		f.add_default();
 
 		var action = new Gtk.Action({
 			name: 'TomboyNote',
 			label: '_Tomboy Note',
 			tooltip: 'Create a Tomboy note from selection',
-			stock_id: 'tomboy',
-			//action: create_tomboy_note
+			stock_id: 'tomboy'
 		});
 		action.signal.activate.connect(create_tomboy_note, window);
 		var group = new Gtk.ActionGroup({name: "TomboyNoteActionGroup"});
@@ -148,11 +150,11 @@ extension = {
 			Gtk.UIManagerItemType.MENUITEM, false);
 
 		var model = Epiphany.EphyShell.get_default().get_toolbars_model(false);
-		model.set_name_flags("TomboyNote", 4) // EGG_TB_MODEL_NAME_KNOWN
+		model.set_name_flags("TomboyNote", 4); // EGG_TB_MODEL_NAME_KNOWN
 	},
 	detach_window: function(window)
 	{
 		window.signal.disconnect(window._tomboy_key_pressed_signal);
 		// TODO remove button and menu and shtuff
 	}
-}
+};
