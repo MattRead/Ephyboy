@@ -3,7 +3,7 @@ Name=Make Tomboy Note
 Description=Creates a Tomboy note based on selected text/
 Authors=Matt Read
 Version=1
-URL=http://www.gnome.org/projects/tomboy
+URL=http://mattread.org/epiphany:epiboy
 
 
 [Loader]
