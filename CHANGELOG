@@ -1,0 +1,34 @@
+2010-09-06  Matt Read <matt@mattread.com>
+
+  * README: add link to readme
+
+  * README: Add installation section to README
+
+  * tomboy.js: Remove menbar items from menbar on detach, code cleanup
+
+  * tomboy.ephy-extension: update website
+
+  * tomboy.ephy-extension: update website
+
+  * README: update readme
+
+  * tomboy.js~: remove backup file
+
+  * EpiBoy.anjuta, TODO.tasks, tomboy.js: lint check
+
+2010-09-05  Matt Read <matt@mattread.com>
+
+  * tomboy.js: a few updates
+
+  * EpiBoy.anjuta, TODO.tasks, tomboy.js, tomboy.js~, tomboy.svg: add tomboy
+  button to toolbar
+
+  * tomboy.js: disconnect signals on exit
+
+  * tomboy.js: update formatting
+
+2010-09-05  Matt Read <matt@elisa.(none)>
+
+  * README: update README
+
+  * README, tomboy.ephy-extension, tomboy.js: initial check in
