@@ -1,15 +1,23 @@
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * EpiBoy v0.1
+ * Create a Tomboy note from selected text in epiphany
+ *
+ * GPL licensed.
+ * Copyright (c) 2010 Matt Read <matt@mattread.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 Epiphany = imports.gi.Epiphany;
 DBus = imports.dbus;
@@ -27,19 +35,20 @@ String.prototype.xmlEscape = function() {
 // create the Tomboy DBus object
 function Tomboy()
 {
-    this._init();
+	this._init();
 }
 
 Tomboy.prototype = {
-    _init: function()
-    {
+	_init: function()
+	{
 		DBus.session.proxifyObject(this, 'org.gnome.Tomboy', '/org/gnome/Tomboy/RemoteControl' );
-    }
+	}
 };
 
+// Tomboy DBus interface
 var TomboyIface = {
-    name: 'org.gnome.Tomboy.RemoteControl',
-    methods: [
+	name: 'org.gnome.Tomboy.RemoteControl',
+	methods: [
 		{ name: 'CreateNamedNote', inSignature: 's', outSignature: 's' },
 		{ name: 'SetNoteContentsXml', inSignature: 'ss', outSignature: 'b' },
 		{ name: 'FindNote', inSignature: 's', outSignature: 's' },
@@ -47,7 +56,7 @@ var TomboyIface = {
 		{ name: 'GetNoteContentsXml', inSignature: 's', outSignature: 's' },
 		{ name: 'AddTagToNote', inSignature: 'ss', outSignature: '' },
 		{ name: 'DisplayNote', inSignature: 's', outSignature: '' }
-    ]
+	]
 };
 DBus.proxifyPrototype(Tomboy.prototype, TomboyIface);
 
@@ -76,7 +85,8 @@ var create_tomboy_note = function(event, window)
 	var uri = '';
 
 	//make the URL look nice, and linkify
-	url = "\n\n<italic><size:small>Source: <link:url>" + url + "</link:url></size:small></italic>\n\n";
+	url = "\n\n<italic><size:small>Source: <link:url>" + url +
+		"</link:url></size:small></italic>\n\n";
 
 	try {
 		// If note title exists append new contents to current contents
@@ -109,11 +119,9 @@ var create_tomboy_note = function(event, window)
 // listen for key pressed, act on ctrl+shift+B
 var key_pressed_cb = function (window, event)
 {
-	if(event.key.state & Gdk.ModifierType.CONTROL_MASK &&
-		event.key.state & Gdk.ModifierType.SHIFT_MASK)
-	{
-		if(event.key.keyval == Gdk.B)
-		{
+	if (event.key.state & Gdk.ModifierType.CONTROL_MASK &&
+		event.key.state & Gdk.ModifierType.SHIFT_MASK) {
+		if (event.key.keyval == Gdk.B) {
 			create_tomboy_note(event, window);
 		}
 	}
@@ -124,15 +132,18 @@ var key_pressed_cb = function (window, event)
 extension = {
 	attach_window: function(window)
 	{
-		window._tomboy_key_pressed_signal = window.signal.key_press_event.connect(key_pressed_cb, window);
+		window._tomboy_key_pressed_signal = window.signal.key_press_event
+			.connect(key_pressed_cb, window);
 
 		// create the tomboy icon cause I don't know if it has a stock_id
+		// TODO find a way for seed to get this file dir and use supplied icon.
 		var f = new Gtk.IconFactory();
 		f.add('tomboy', new Gtk.IconSet.from_pixbuf(
 			new GdkPixbuf.Pixbuf.from_file('/usr/share/icons/hicolor/scalable/apps/tomboy.svg')
 		));
 		f.add_default();
 
+		// Create the action and group to add to menubar
 		var action = new Gtk.Action({
 			name: 'TomboyNote',
 			label: '_Tomboy Note',
@@ -149,12 +160,25 @@ extension = {
 		ui_manager.add_ui(merge_id, "/menubar/ToolsMenu", "TomboyNoteMenu", "TomboyNote",
 			Gtk.UIManagerItemType.MENUITEM, false);
 
+		// store everything so we can remove it on detach
+		window._tomboy_menu = {
+			ui_manager: ui_manager,
+			merge_id: merge_id,
+			action: action,
+			group: group
+		};
+
 		var model = Epiphany.EphyShell.get_default().get_toolbars_model(false);
 		model.set_name_flags("TomboyNote", 4); // EGG_TB_MODEL_NAME_KNOWN
 	},
 	detach_window: function(window)
 	{
 		window.signal.disconnect(window._tomboy_key_pressed_signal);
-		// TODO remove button and menu and shtuff
+		// remove button and menu and shtuff
+		var tbm = window._tomboy_menu;
+		tbm.ui_manager.remove_ui(tbm.merge_id);
+		tbm.ui_manager.remove_action_group(tbm.group);
+		tbm.group.remove_action(tbm.action);
+		delete window._tomboy_menu;
 	}
 };
