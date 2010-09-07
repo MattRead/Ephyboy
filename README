@@ -1,5 +1,5 @@
-EpiBoy Extension for Epiphany
-by Matt Read, 2010
+EpiBoy Extension for Epiphany by Matt Read, 2010
+http://github.com/MattRead/EpiBoy/wiki
 
 This extension will create a new Tomboy note in Tomboy based upon the current
 web page and selected text.
@@ -18,5 +18,5 @@ Simply select the text you want in the note and press CTRL+SHIFT+B to create
 the note and open it in Tomboy. Or, you can add the tomboy button to your
 toolbar where ever you want.
 
-The default notebook is "Snippets". Hopefullythis will be customizable in the
+The default notebook is "Snippets". Hopefully this will be customizable in the
 next release.
