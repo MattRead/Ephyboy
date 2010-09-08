@@ -1,12 +1,12 @@
-EpiBoy Extension for Epiphany by Matt Read, 2010
-http://github.com/MattRead/EpiBoy/wiki
+Ephyboy Extension for Epiphany by Matt Read, 2010
+http://github.com/MattRead/Ephyboy/wiki
 
 This extension will create a new Tomboy note in Tomboy based upon the current
 web page and selected text.
 
 INSTALLATION
 
-Just copy `tomboy.js` and `tomboy.ephy-extension` to `~/.gnome2/epiphany/extensions/`.
+Just copy `ephyboy.js` and `ephyboy.ephy-extension` to `~/.gnome2/epiphany/extensions/`.
 Then enable the extension in the Extension Manager.
 
 USAGE

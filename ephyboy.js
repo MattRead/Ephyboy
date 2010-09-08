@@ -1,5 +1,5 @@
 /**
- * EpiBoy v0.1
+ * EphyBoy v0.1
  * Create a Tomboy note from selected text in epiphany
  *
  * GPL licensed.
