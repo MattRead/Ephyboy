@@ -1,9 +1,9 @@
 [Epiphany Extension]
-Name=Make Tomboy Note
-Description=Creates a Tomboy note based on selected text/
+Name=Ephyboy
+Description=Creates a Tomboy note based on selected text.
 Authors=Matt Read
 Version=1
-URL=http://github.com/MattRead/EpiBoy/wiki
+URL=http://github.com/MattRead/Ephyboy/wiki
 
 
 [Loader]
