@@ -67,14 +67,16 @@ var tomboy = null;
 var create_tomboy_note = function(event, window)
 {
     // connect to DBus if we are not yet.
-    if (!tomboy)
+    if (!tomboy) {
         tomboy = new Tomboy();
+    }
 
     // short circuit if nothing selected. This doesn't really work
     var content = window.get_clipboard(Gdk.atom_intern("PRIMARY")).wait_for_text().xmlEscape();
 
-    if (!content)
+    if (!content) {
         return false;
+    }
 
     // get title, url, and selection; and encode data for XML
     var web_view = window.get_active_child().get_web_view();

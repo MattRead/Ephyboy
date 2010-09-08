@@ -8,4 +8,4 @@ URL=http://github.com/MattRead/Ephyboy/wiki
 
 [Loader]
 Type=seed
-Module=tomboy
+Module=ephyboy
