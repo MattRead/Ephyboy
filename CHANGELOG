@@ -1,5 +1,8 @@
 2010-09-08  Matt Read <matt@mattread.com>
 
+  * CHANGELOG, ephyboy.ephy-extension, ephyboy.js: fix segfault from wrong name
+  for Module
+
   * CHANGELOG: update changelog
 
   * CHANGELOG: update changelog
