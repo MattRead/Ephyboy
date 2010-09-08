@@ -1,4 +1,17 @@
+2010-09-08  Matt Read <matt@mattread.com>
+
+  * ephyboy.ephy-extension: update for new name
+
+  * README, ephyboy.js: update README for new name
+
+  * ephyboy.ephy-extension, ephyboy.js, tomboy.ephy-extension, tomboy.js:
+  rename files
+
 2010-09-06  Matt Read <matt@mattread.com>
+
+  * tomboy.js: use spaces instead of tabs. and make things line up
+
+  * CHANGELOG: add Changelog for 0.1
 
   * README: add link to readme
 
